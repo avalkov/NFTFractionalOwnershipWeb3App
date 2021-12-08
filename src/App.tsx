@@ -9,9 +9,16 @@ import Wrapper from './components/Wrapper';
 import Header from './components/Header';
 import Loader from './components/Loader';
 import ConnectButton from './components/ConnectButton';
+import MintNFT from './components/MintNFT';
+import FractionalizeNFT from './components/FractionalizeNFT';
+import Menu from './components/Menu'
 
 import { Web3Provider } from '@ethersproject/providers';
 import { getChainData } from './helpers/utilities';
+
+
+const SIMPLE_NFT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const FRACTIONALIZE_NFT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 
 const SLayout = styled.div`
   position: relative;
@@ -58,6 +65,8 @@ interface IAppState {
   result: any | null;
   electionContract: any | null;
   info: any | null;
+  mintingSelected: boolean;
+  fractionalizationProtocolSelected: boolean;
 }
 
 const INITIAL_STATE: IAppState = {
@@ -69,7 +78,9 @@ const INITIAL_STATE: IAppState = {
   pendingRequest: false,
   result: null,
   electionContract: null,
-  info: null
+  info: null,
+  mintingSelected: false,
+  fractionalizationProtocolSelected: false
 };
 
 class App extends React.Component<any, any> {
@@ -103,7 +114,7 @@ class App extends React.Component<any, any> {
     const library = new Web3Provider(this.provider);
 
     const network = await library.getNetwork();
-
+  
     const address = this.provider.selectedAddress ? this.provider.selectedAddress : this.provider?.accounts[0];
 
     await this.setState({
@@ -209,14 +220,43 @@ class App extends React.Component<any, any> {
                 </SContainer>
               </Column>
             ) : (
+                <div>
+                {this.state.connected && <Menu items={[
+                    {label: "Minting", selected: this.state.mintingSelected, onclick: this.showMinting}, 
+                    {label: "Fractionalization Protocol", selected: this.state.fractionalizationProtocolSelected, 
+                    onclick: this.showFractionalizationProtocol}
+                  ]} />}
                 <SLanding center>
                   {!this.state.connected && <ConnectButton onClick={this.onConnect} />}
+                  {this.state.connected && this.state.mintingSelected 
+                    && <MintNFT contractAddress={SIMPLE_NFT_ADDRESS} library={this.state.library} account={address} />}
+                  {this.state.connected && this.state.fractionalizationProtocolSelected 
+                    && <FractionalizeNFT fractionalizationProtocolContractAddress={FRACTIONALIZE_NFT_ADDRESS} 
+                    nftsContractAddress={SIMPLE_NFT_ADDRESS}
+                    library={this.state.library} account={address} />}
                 </SLanding>
+                </div>
               )}
           </SContent>
         </Column>
       </SLayout>
     );
+  };
+
+  private showMinting = () => {
+    if (this.state.mintingSelected) {
+      return;
+    }
+
+    this.setState({ fractionalizationProtocolSelected: false, mintingSelected: true });
+  };
+
+  private showFractionalizationProtocol = () => {
+    if (this.state.fractionalizationProtocolSelected) {
+      return;
+    }
+
+    this.setState({ fractionalizationProtocolSelected: true, mintingSelected: false });
   };
 }
 

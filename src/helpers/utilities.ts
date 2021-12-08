@@ -4,6 +4,8 @@ import '../../node_modules/noty/lib/noty.css';
 import '../../node_modules/noty/lib/themes/mint.css';  
 
 const NOTIFICATION_TIMEOUT = 3500;
+export const NOTIFICATION_SUCCESS = 'success';
+export const NOTIFICATION_ERROR = 'error';
 
 export function capitalize(string: string): string {
   return string
@@ -133,11 +135,59 @@ export function getChainData(chainId: number): any {
   return chainData;
 }
 
-export function showNotification(text:string) {
+export function showNotification(text:string, notificationType: typeof NOTIFICATION_SUCCESS | typeof NOTIFICATION_ERROR) {
     new Noty({ 
       text,
       timeout: NOTIFICATION_TIMEOUT,
-      type: 'success'
+      type: notificationType
       
   }).show();
 }
+
+export function bigNumberArrayToStrArray(inputArr: any[]) {
+  const outputArr : any[] = []
+  
+  for (let i = 0; i < inputArr.length; i++) {
+    outputArr.push(inputArr[i].toString())
+  }
+  
+  return outputArr
+}
+
+function shallowEqual(object1: any, object2: any) {
+  const keys1 = Object.keys(object1);
+  const keys2 = Object.keys(object2);
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+  for (const key of keys1) {
+    if (typeof object1[key] === 'object') {
+      if (shallowEqual(object1[key], object2[key]) === false) {
+        return false;
+      }
+    } else if (object1[key] !== object2[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function arraysEqual(array1: any[], array2: any[]) {
+  return (array1.length === array2.length) && array1.every((element, index) => {
+    if (typeof element === 'object') {
+      return shallowEqual(element, array2[index]);
+    }
+    return element === array2[index];
+  });
+}
+
+export function truncateAfterDecimal(num: string, digitsAfterDecimal: number) {
+  if (num.indexOf('.') === -1) {
+    return num;
+  }
+
+  const parts = num.split('.');
+
+  return parts[0] + '.' + parts[1].substr(0, digitsAfterDecimal);
+}
+

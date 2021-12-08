@@ -16,6 +16,7 @@
     "bignumber.js": "^8.1.1",
     "bitski": "^0.10.9",
     "blockies-ts": "^1.0.0",
+    "contracts": "file:../NFTFractionalOwnershipProtocol/artifacts/contracts",
     "ethereumjs-util": "^6.1.0",
     "ethers": "^5.0.24",
     "fortmatic": "^0.8.2",
@@ -24,6 +25,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts-ts": "^4.0.8",
+    "reactjs-popup": "^2.0.5",
     "styled-components": "4.2.0",
     "web3": "^1.3.0",
     "web3modal": "^1.9.2"
