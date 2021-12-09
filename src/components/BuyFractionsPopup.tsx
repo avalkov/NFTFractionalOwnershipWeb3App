@@ -20,7 +20,12 @@ const BuyFractionsPopup = (props: any) => {
             <popupStyles.SCloseButton className='close' onClick={props.close}>&times;</popupStyles.SCloseButton>
 
             <div>Amount:</div>
-            <input type='number' min='1' value={amount} onChange={(e) => {setAmount(parseInt(e.target.value, 10))}} />
+            <input type='number' min='1' value={amount} onChange={(e) => {
+                    if (e.target.value.length > 0) {
+                        setAmount(parseInt(e.target.value, 10))
+                    }
+                }
+            } />
 
             <popupStyles.SButton>
                 <Button onClick={submit} children={React.createElement('span', null, 'Submit')} />

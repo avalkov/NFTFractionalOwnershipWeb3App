@@ -38,7 +38,12 @@ const FractionalizePopup = (props: any) => {
             <popupStyles.SCloseButton className='close' onClick={props.close}>&times;</popupStyles.SCloseButton>
 
             <div>Total supply:</div>
-            <input type='number' min='1' value={totalSupply} onChange={(e) => {setTotalSupply(parseInt(e.target.value, 10))}} />
+            <input type='number' min='1' value={totalSupply} onChange={(e) => {
+                    if (e.target.value.length > 0) {
+                        setTotalSupply(parseInt(e.target.value, 10))
+                    }
+                }
+            } />
 
             <div>Token name:</div>
             <input type='text' value={tokenName} onChange={(e) => {setTokenName(e.target.value)}} />
@@ -47,7 +52,12 @@ const FractionalizePopup = (props: any) => {
             <input type='text' maxLength={3} value={tokenSymbol} onChange={(e) => {setTokenSymbol(e.target.value)}} />
 
             <div>Price per token in ETH:</div>
-            <input type='number' min='0' step='0.01' value={pricePerToken} onChange={(e) => {setPericePerToken(parseFloat(e.target.value))}} />
+            <input type='number' min='0' step='0.01' value={pricePerToken} onChange={(e) => {
+                    if (e.target.value.length > 0) {
+                        setPericePerToken(parseFloat(e.target.value))
+                    }
+                }
+            } />
             
             <popupStyles.SButton>
                 <Button onClick={submit} children={React.createElement('span', null, 'Submit')} />
