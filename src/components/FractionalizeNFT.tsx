@@ -251,7 +251,6 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
 
             // Fetch NFTs for sale and their iamges
             const nftsForSale = await fractionalizeNFTContract.getAllNFTsForSale()
-
             const parsedNFTsForSale = parseNFTsForSale(nftsForSale, props.account)
 
             if (!arraysEqual(parsedNFTsForSale, state.allNFTsForSale)) {
@@ -265,14 +264,14 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
                 }
                 newState = {...newState, allNFTsForSale: parsedNFTsForSale, nftsImages: {...newState.nftsImages, ...urls}}
             }
-
+            
             // Update state if something changed
             if (Object.keys(newState).length > 0) {
                 setState({...state, ...newState})
             }
         }
     
-        fetchData().catch(() => {
+        fetchData().catch((e) => {
             showNotification("Failed to fetch user data.", NOTIFICATION_ERROR)
         })
 
@@ -424,7 +423,13 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
 
         try {
             if (await simpleNFTContract.isApprovedForAll(props.account, fractionalizeNFTContract.address) === false) {
-                await simpleNFTContract.setApprovalForAll(fractionalizeNFTContract.address, true);
+                const transaction = await simpleNFTContract.setApprovalForAll(fractionalizeNFTContract.address, true)
+                const transactionReceipt = await transaction.wait()
+
+                if (transactionReceipt.status !== 1) {
+                    showNotification("Failed to deposit NFT.", NOTIFICATION_ERROR)
+                    return
+                }
             }
 
             const transaction = await fractionalizeNFTContract.deposit(simpleNFTContract.address, tokenID)
@@ -516,7 +521,13 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
                     const fractionsTotalSupply = state.boughtFractions[i].nft.fractionsTotalSupply
 
                     if (fractionsTotalSupply >= allowanceAmount) {
-                        await fractionsContract.increaseAllowance(fractionalizeNFTContract.address, fractionsTotalSupply)
+                        const transaction = await fractionsContract.increaseAllowance(fractionalizeNFTContract.address, fractionsTotalSupply)
+                        const transactionReceipt = await transaction.wait()
+
+                        if (transactionReceipt.status !== 1) {
+                            showNotification("Failed to buyback NFT", NOTIFICATION_ERROR)
+                            continue
+                        }
                     }
 
                     const transaction = await fractionalizeNFTContract.buyBackNFT(state.selectedBoughtFractionsUniqueID)
@@ -526,8 +537,9 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
                         showNotification("Successfully bought back NFT.", NOTIFICATION_SUCCESS)
                         forceUpdate()
                     } else {
-                        showNotification("Failed to buyback NFT.", NOTIFICATION_ERROR)
+                        showNotification("Failed to buyback NFT", NOTIFICATION_ERROR)
                     }
+
                 } catch {
                     showNotification("Failed to buyback NFT.", NOTIFICATION_ERROR)
                 }
