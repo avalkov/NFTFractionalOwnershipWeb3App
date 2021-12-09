@@ -271,7 +271,7 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
             }
         }
     
-        fetchData().catch((e) => {
+        fetchData().catch(() => {
             showNotification("Failed to fetch user data.", NOTIFICATION_ERROR)
         })
 
