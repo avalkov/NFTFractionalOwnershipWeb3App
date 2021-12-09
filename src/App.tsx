@@ -17,8 +17,9 @@ import { Web3Provider } from '@ethersproject/providers';
 import { getChainData } from './helpers/utilities';
 
 
-const SIMPLE_NFT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-const FRACTIONALIZE_NFT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+// ROPSTEN
+const SIMPLE_NFT_ADDRESS = '0x149Af67a17D1F152A1b0C849C897DFcf63ac2a14';
+const FRACTIONALIZE_NFT_ADDRESS = '0x872fcfF0e5CC477Fd7882022f4745E7cd511E1Ff';
 
 const SLayout = styled.div`
   position: relative;
