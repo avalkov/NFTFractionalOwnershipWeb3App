@@ -400,7 +400,8 @@ const FractionalizeNFT = (props: IFractionalizeNFTProps) => {
                 {state.selectedNFTForSaleUniqueTokenID === uniqueTokenId
                 ? <SSelectedImg src={state.nftsImages[uniqueTokenId]} onClick={() => { onClickNFTForSale(uniqueTokenId, pricePerToken) }} />
                 : <SImg src={state.nftsImages[uniqueTokenId]} onClick={() => { onClickNFTForSale(uniqueTokenId, pricePerToken) }} />}
-                <div>Bought: {state.allNFTsForSale[i].availableFractions}/{state.allNFTsForSale[i].fractionsTotalSupply}</div>
+                <div>Available: {state.allNFTsForSale[i].availableFractions}/{state.allNFTsForSale[i].fractionsTotalSupply}</div>
+                <div>Price: {truncateAfterDecimal(formatEther(state.allNFTsForSale[i].weiPricePerToken), 4)}</div>
             </div>)
     }
 
